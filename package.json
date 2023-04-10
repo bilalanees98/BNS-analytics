@@ -7,8 +7,7 @@
     "dev": "vite dev",
     "build": "vite build",
     "preview": "vite preview",
-    "serve": "npm run build && npm run preview",
-    "gh-pages": "npm run build && npx gh-pages -d build"
+    "serve": "npm run build && npm run preview"
   },
   "devDependencies": {
     "@stacks/blockchain-api-client": "^7.1.1",
