@@ -2,15 +2,21 @@
   import { namesApiClient } from "../lib/nameApiClient";
   import { binarySearch } from "../lib/utils";
 
+  export let namespace = ""; //empty means its for all BNS names
   let nameCount = 0;
   let isCounting = false;
   let isErrorThrown = false;
   let errorText = "";
-
   async function fetchNames(pageCount) {
-    return await namesApiClient.getAllNames({ page: pageCount });
+    if (!namespace)
+      return await namesApiClient.getAllNames({
+        page: pageCount,
+      });
+    return await namesApiClient.getNamespaceNames({
+      page: pageCount,
+      tld: namespace,
+    });
   }
-
   async function isPageCountValid(pageCount) {
     try {
       await fetchNames(pageCount);
@@ -25,7 +31,6 @@
       }
     }
   }
-
   async function searchCondition(pageCount) {
     const condition = !(await isPageCountValid(pageCount));
     console.log(
@@ -35,17 +40,14 @@
   }
   async function countNames() {
     let pageCount = 0;
-
     const MAX_NUM_OF_RESULTS_PER_PAGE = 100;
     try {
       isCounting = true;
       pageCount = (await binarySearch(0, 10000, searchCondition)) - 1; //binary search returns pagecount+1
       const namesOnFinalPage = (await fetchNames(pageCount)).length;
-
       nameCount =
         namesOnFinalPage + (pageCount - 1) * MAX_NUM_OF_RESULTS_PER_PAGE;
       console.log("Number of names: ", nameCount);
-
       isCounting = false;
     } catch (err) {
       const { status } = err;
@@ -59,7 +61,7 @@
 
 <div class="countBoard">
   <div>
-    <h2>Number of .BTC names</h2>
+    <h2>Number of {namespace ? "." + namespace : "BNS"} names</h2>
   </div>
   <div class="row">
     <h3 class="countDisplay border">

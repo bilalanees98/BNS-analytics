@@ -1,7 +1,7 @@
 <script>
-  import BtcNameCount from "./BtcNameCount.svelte";
+  import NameCount from "./NameCount.svelte";
 </script>
 
 <h1>BNS Analytics</h1>
-
-<BtcNameCount />
+<NameCount namespace="app" />
+<NameCount namespace="btc" />
